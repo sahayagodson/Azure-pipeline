@@ -1,0 +1,30 @@
+pool: 
+  name: "Azure Pipelines"
+steps: 
+  - 
+    displayName: Restore
+    inputs: 
+      command: restore
+      projects: $(Parameters.RestoreBuildProjects)
+    task: DotNetCoreCLI@2
+  - 
+    displayName: Build
+    inputs: 
+      arguments: "--configuration $(BuildConfiguration)"
+      projects: $(Parameters.RestoreBuildProjects)
+    task: DotNetCoreCLI@2
+  - 
+    displayName: Test
+    inputs: 
+      arguments: "--configuration $(BuildConfiguration)"
+      command: test
+      projects: $(Parameters.TestProjects)
+    task: DotNetCoreCLI@2
+  - 
+    displayName: Publish
+    inputs: 
+      arguments: "--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)"
+      command: publish
+      publishWebProjects: true
+      zipAfterPublish: true
+    task: DotNetCoreCLI@2
